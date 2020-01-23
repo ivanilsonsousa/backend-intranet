@@ -9,6 +9,8 @@ const Document = require('../models/Document')
  * @destroy para remover um documento dentro do banco
  */
 
+ //Teste
+
 module.exports = {
     async index(req, res) {
         const document = await Document.find()
