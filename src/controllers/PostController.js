@@ -1,6 +1,11 @@
 const Post = require('../models/Post')
 
 module.exports = {
+    async index(req, res) {
+      const post = await Post.find()
+
+      return res.json(post)
+    },
     async store(req, res) {
       
       try {
