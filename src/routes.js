@@ -3,13 +3,20 @@ const multer = require('multer')
 const uploadConfig = require('./config/upload')
 const uploadConfigCaroussel = require('./config/uploadCaroussel')
 
+const makeDir = require('./config/makeDir')
+
 const PostController = require('./controllers/PostController')
 const PhotoPostController = require('./controllers/PhotoPostController')
 const DocumentController = require('./controllers/DocumentController')
+const FolderController = require('./controllers/FolderController')
 
 const routes = express.Router()
 const upload = multer(uploadConfig)
 const uploadCaroussel = multer(uploadConfigCaroussel)
+
+function teste(req, res, next) {
+  console.log("passou por aqui..........")
+}
 
 routes.post('/posts', PostController.store)
 routes.get('/posts', PostController.index)
@@ -19,5 +26,7 @@ routes.get('/posts-caroussel', PhotoPostController.index)
 
 routes.post('/documents', upload.single('file'), DocumentController.store)
 routes.get('/documents/:parent', DocumentController.index)
+
+routes.post('/folders', makeDir, FolderController.store)
 
 module.exports = routes

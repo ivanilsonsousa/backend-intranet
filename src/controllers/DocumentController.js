@@ -18,15 +18,15 @@ module.exports = {
         return res.json(document)
     },
     async store(req, res) {
+        req.body.type = 'file'
         const { filename } = req.file
-        const { title, dir, parent } = req.body
-
-        // console.log(req.body.gabigol)
+        const { title, dir, parent, type } = req.body
 
         const document = await Document.create({
           title,
           dir,
           parent,
+          type,
           file: filename,
         })
 
