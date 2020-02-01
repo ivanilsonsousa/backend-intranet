@@ -11,11 +11,12 @@ module.exports = {
     async store(req, res) {
         req.body.type = 'folder'
         const { type } = req.body
-        const { dir: folder, title, parent } = req.headers
+        const { dir: folder, title, parent, dir } = req.body
 
         const document = await Document.create({
           title,
           folder,
+          dir,
           parent,
           type,
         })
