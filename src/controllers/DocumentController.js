@@ -11,6 +11,11 @@ const Document = require('../models/Document')
 
 module.exports = {
     async index(req, res) {
+        const document = await Document.find()
+
+        return res.json(document)
+    },
+    async show(req, res) {
         const document = await Document.find({ parent: { $eq: req.params.parent } })
 
         console.log(req.params.parent)
@@ -20,12 +25,13 @@ module.exports = {
     async store(req, res) {
         req.body.type = 'file'
         const { filename } = req.file
-        const { title, dir, parent, type } = req.body
-
+        const { title, parent, type, dir, format } = req.body
+        
         const document = await Document.create({
           title,
           dir,
           parent,
+          format,
           type,
           file: filename,
         })

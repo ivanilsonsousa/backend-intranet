@@ -1,8 +1,8 @@
 const express = require('express')
 const multer = require('multer')
+
 const uploadConfig = require('./config/upload')
 const uploadConfigCaroussel = require('./config/uploadCaroussel')
-
 const makeDir = require('./config/makeDir')
 
 const PostController = require('./controllers/PostController')
@@ -25,7 +25,8 @@ routes.post('/posts-caroussel', uploadCaroussel.single('file'), PhotoPostControl
 routes.get('/posts-caroussel', PhotoPostController.index)
 
 routes.post('/documents', upload.single('file'), DocumentController.store)
-routes.get('/documents/:parent', DocumentController.index)
+routes.get('/documents/', DocumentController.index)
+routes.get('/documents/:parent', DocumentController.show)
 
 routes.post('/folders', makeDir, FolderController.store)
 

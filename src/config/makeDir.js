@@ -16,10 +16,8 @@ module.exports = async function makeDir(req, res, next) {
   const dir = path.resolve(`${__dirname}/../../uploads/${new_path}/`)
 
   if (!fs.existsSync(dir)){
-    //Efetua a criação do diretório
     fs.mkdirSync(dir);
   }
 
-  console.log(`pasouuuuuu + ${req.body.folder}`)
   next()
 }
