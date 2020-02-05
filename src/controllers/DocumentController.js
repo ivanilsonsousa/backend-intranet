@@ -16,7 +16,7 @@ module.exports = {
         return res.json(document)
     },
     async show(req, res) {
-        const document = await Document.find({ parent: { $eq: req.params.parent } })
+        const document = await Document.find({ parent: { $eq: req.params.parent } }).sort( { "type" :  -1 , "file": 1 } )
 
         console.log(req.params.parent)
 
