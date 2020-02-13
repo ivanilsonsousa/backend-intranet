@@ -2,7 +2,7 @@ const Post = require('../models/Post')
 
 module.exports = {
     async index(req, res) {
-      const post = await Post.find()
+      const post = await Post.find().limit(3)
 
       return res.json(post)
     },
