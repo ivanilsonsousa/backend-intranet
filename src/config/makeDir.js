@@ -2,7 +2,6 @@ const Document = require('../models/Document')
 const path = require('path')
 const fs = require('fs')
 
-
 module.exports = async function makeDir(req, res, next) {
   const document = req.body.parent == 'root' ? null : await Document.find({ _id: { $eq: req.body.parent } })
 

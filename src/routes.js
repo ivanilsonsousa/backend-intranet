@@ -4,6 +4,7 @@ const multer = require('multer')
 const uploadConfig = require('./config/upload')
 const uploadConfigCaroussel = require('./config/uploadCaroussel')
 const makeDir = require('./config/makeDir')
+const deleteDir = require('./config/deleteDir')
 
 const PostController = require('./controllers/PostController')
 const PhotoPostController = require('./controllers/PhotoPostController')
@@ -27,6 +28,7 @@ routes.get('/posts-caroussel', PhotoPostController.index)
 routes.post('/documents', upload.single('file'), DocumentController.store)
 routes.get('/documents/', DocumentController.index)
 routes.get('/documents/:parent', DocumentController.show)
+routes.delete('/documents/:id', deleteDir,DocumentController.destroy)
 
 routes.post('/folders', makeDir, FolderController.store)
 

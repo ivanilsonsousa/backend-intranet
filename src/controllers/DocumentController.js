@@ -16,14 +16,25 @@ module.exports = {
         return res.json(document)
     },
     async show(req, res) {
-        const document = await Document.find({ parent: { $eq: req.params.parent } }).sort( { "type" :  -1 , "file": 1 } )
+        const document = await Document.find({ parent: { $eq: req.params.parent } }).sort( { "type":  -1 , "file": 1 } )
 
         return res.json(document)
     },
     async destroy(req, res) {
         const document = await Document.find({ _id: { $eq: req.params.id } })
 
-        return res.json(document)
+        let idsDelete = [document[0]._id]
+        let idsSearch = idsDelete
+
+        do {
+          childrens = await Document.find( { parent: { $in: idsSearch } } )
+          idsSearch = childrens.map(e => e._id)
+          idsDelete = [...idsDelete, ...idsSearch]
+        } while (idsSearch.length)
+
+        const response = await Document.deleteMany( { _id: { $in: idsDelete } } )
+
+        return res.json(response)
     },
     async store(req, res) {
         req.body.type = 'file'
