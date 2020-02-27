@@ -4,7 +4,7 @@ const path = require('path')
 
 module.exports = async function deleteDir(req, res, next) {
   const document = await Document.findById( req.params.id )
-  const dir = path.resolve(`${__dirname}/../../uploads/${document.dir}/`)
+  const dir = path.resolve(`${__dirname}/../../uploads/${document.dir}/${document.type === 'file' ? document.file : ''}`)
 
   rimraf(dir, () => next())
 }

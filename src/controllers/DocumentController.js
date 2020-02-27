@@ -21,9 +21,9 @@ module.exports = {
         return res.json(document)
     },
     async destroy(req, res) {
-        const document = await Document.find({ _id: { $eq: req.params.id } })
+        const document = await Document.findById(req.params.id)
 
-        let idsDelete = [document[0]._id]
+        let idsDelete = [document._id]
         let idsSearch = idsDelete
 
         do {
