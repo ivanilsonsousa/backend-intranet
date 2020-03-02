@@ -15,10 +15,6 @@ const routes = express.Router()
 const upload = multer(uploadConfig)
 const uploadCaroussel = multer(uploadConfigCaroussel)
 
-function teste(req, res, next) {
-  console.log("passou por aqui..........")
-}
-
 routes.post('/posts', PostController.store)
 routes.get('/posts', PostController.index)
 

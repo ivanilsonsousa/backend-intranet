@@ -18,8 +18,4 @@ DocumentSchema.virtual('file_url').get(function() {
   return this.type === 'folder' ? 'directory' : `http://10.1.3.119:3333/files${this.dir}/${this.file}`
 })
 
-DocumentSchema.virtual('teste').get(function() {
-  return this.type === 'folder' ? 'directory' : `teste`
-})
-
 module.exports = mongoose.model('Document', DocumentSchema)

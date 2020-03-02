@@ -1,4 +1,5 @@
 const Document = require('../models/Document')
+const getDir = require('../config/getDir')
 
 /**
  * Methods of controllers index, show, store, update, destroy:
@@ -16,9 +17,11 @@ module.exports = {
         return res.json(document)
     },
     async show(req, res) {
-        const document = await Document.find({ parent: { $eq: req.params.parent } }).sort( { "type":  -1 , "file": 1 } )
+        const document = await Document.find({ parent: { $eq: req.params.parent } }).sort( { "type":  -1 , "title": 1, "file": 1 } )
 
-        return res.json(document)
+        const response = document.map(element => getDir(element).then(e => e))
+
+        return res.json(response)
     },
     async destroy(req, res) {
         const document = await Document.findById(req.params.id)
