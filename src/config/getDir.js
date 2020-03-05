@@ -1,23 +1,51 @@
 const Document = require('../models/Document')
 
-module.exports = async function getDir(obj) {
-  let parent = obj.parent
-  let element, document = null
-  let dir = obj.type === 'folder' ? obj.title : ''
+async function getDirDocuments(documents) {
+  let query
+  
+  const promises = documents.map(async element => {
+    let parent = element.parent
+    let dir = element.type === 'folder' ? element.title : ''
+
+    while(parent != 'root') {
+      query = await Document.findById(parent)
+      parent = query.parent
+      dir = `${query.title}/${dir}`
+    }
+
+    let doc = { ...element["_doc"], "directory": dir }
+
+    if(element.type === 'file')
+      doc.url = `http://10.1.3.119:3333/files/${dir}${element.file}`
+
+    return doc
+  })
+
+  return Promise.all(promises).then(function(results) {
+    return results
+  })
+}
+
+async function getDirDoc(document) {
+  if(!document)
+    return {}
+
+  let parent = document.parent
+  let dir = document.type === 'folder' ? document.title : ''
 
   while(parent != 'root') {
-    document = await Document.findById(parent)
-    element = { ...document["_doc"] }
-    parent = document.parent
-
-    dir = `${document.title}/${dir}`
+    query = await Document.findById(parent)
+    parent = query.parent
+    dir = `${query.title}/${dir}`
   }
 
-  element.directory = dir
+  let doc = { ...document["_doc"], "directory": dir }
 
-  console.log("*****a")
-  console.log(dir)
-  console.log("*****b")
+  if(document.type === 'file')
+    doc.url = `http://10.1.3.119:3333/files/${dir}${document.file}`
 
-  return element
+  return doc
 }
+
+
+module.exports = { getDirDoc, getDirDocuments }

@@ -1,4 +1,5 @@
 const Document = require('../models/Document')
+const { getDirDoc } = require('../config/getDir')
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
@@ -9,20 +10,18 @@ function makeDir(folder) {
   if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
   }
-
 }
 
 module.exports = {
     storage: multer.diskStorage({
         destination: async (req, file, cb) => {
           const { parent } = req.body
-          const document = await Document.find({ _id: { $eq: parent } })
-          const folder = document[0].dir
-
-          req.body.dir = `/${folder}`
-          makeDir(folder)
+          const document = await Document.findById(parent)
           
-          cb(null, path.resolve(__dirname, '..', '..', 'uploads', `${folder}`))
+          getDirDoc(document).then(response => {
+            makeDir(response.directory)
+            cb(null, path.resolve(__dirname, '..', '..', 'uploads', `${response.directory}`))
+          })
         },
         filename: (req, file, cb) => {
           const ext = path.extname(file.originalname)

@@ -1,5 +1,5 @@
 const Document = require('../models/Document')
-const getDir = require('../config/getDir')
+const { getDirDocuments } = require('../config/getDir')
 
 /**
  * Methods of controllers index, show, store, update, destroy:
@@ -12,17 +12,17 @@ const getDir = require('../config/getDir')
 
 module.exports = {
     async index(req, res) {
-        const document = await Document.find()
+      const document = await Document.find()
 
-        return res.json(document)
+      return res.json(document)
     },
     async show(req, res) {
-        const document = await Document.find({ parent: { $eq: req.params.parent } }).sort( { "type":  -1 , "title": 1, "file": 1 } )
+      const document = await Document.find({ parent: { $eq: req.params.parent } }).sort({ "type":  -1 , "title": 1, "file": 1 })
 
-        const response = document.map(element => getDir(element).then(e => e))
-
+      getDirDocuments(document).then(response => {
         return res.json(response)
-    },
+      })
+  },
     async destroy(req, res) {
         const document = await Document.findById(req.params.id)
 
@@ -30,12 +30,12 @@ module.exports = {
         let idsSearch = idsDelete
 
         do {
-          childrens = await Document.find( { parent: { $in: idsSearch } } )
+          childrens = await Document.find({ parent: { $in: idsSearch } })
           idsSearch = childrens.map(e => e._id)
           idsDelete = [...idsDelete, ...idsSearch]
         } while (idsSearch.length)
 
-        const response = await Document.deleteMany( { _id: { $in: idsDelete } } )
+        const response = await Document.deleteMany({ _id: { $in: idsDelete } })
 
         return res.json(response)
     },
@@ -46,7 +46,7 @@ module.exports = {
         
         const document = await Document.create({
           title,
-          dir,
+          // dir,
           parent,
           format,
           type,

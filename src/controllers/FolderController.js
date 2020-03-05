@@ -19,7 +19,7 @@ module.exports = {
         const document = await Document.create({
           title,
           folder,
-          dir,
+          // dir,
           parent,
           type,
         })
