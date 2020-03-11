@@ -10,10 +10,20 @@ module.exports = async function makeDir(req, res, next) {
   getDirDoc(document).then(response => {
     const dir = path.resolve(`${__dirname}/../../uploads${document ? `/${response.directory}` : ''}/${title}`)
     
-    if(!fs.existsSync(dir)) {
-      fs.mkdirSync(dir)
-    }
+    if (!fs.existsSync(dir)){
+      //Efetua a criação do diretório
+      fs.mkdir(dir, (err) => {
+        if (err) {
+          return res.status(409).json({ message: "Erro ao criar diretório!" })
+        }
   
-    next()
+        console.log("Diretório criado com sucesso! =)")
+        next()
+      });
+    } else {
+      console.log("diretorio já existe...")
+      return res.status(409).json({ message: "Essa pasta já existe no diretório informado!" })
+    }
+
   })
 }

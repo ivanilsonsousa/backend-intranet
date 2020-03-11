@@ -22,7 +22,7 @@ module.exports = {
       getDirDocuments(document).then(response => {
         return res.json(response)
       })
-  },
+    },
     async destroy(req, res) {
         const document = await Document.findById(req.params.id)
 
@@ -39,14 +39,19 @@ module.exports = {
 
         return res.json(response)
     },
+    async update(req, res) {
+      const { title } = req.body
+      const document = await Document.findByIdAndUpdate({ _id: req.params.id }, { title })
+
+      return res.json(document)
+    },
     async store(req, res) {
         req.body.type = 'file'
         const { filename } = req.file
-        const { title, parent, type, dir, format } = req.body
+        const { title, parent, type, format } = req.body
         
         const document = await Document.create({
           title,
-          // dir,
           parent,
           format,
           type,

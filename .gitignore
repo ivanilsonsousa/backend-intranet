@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 /uploads
+!/uploads/photos-caroussel
 .pnp.js
 
 # testing
