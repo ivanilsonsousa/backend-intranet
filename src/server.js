@@ -5,6 +5,7 @@ const cors = require('cors')
 
 const routes = require('./routes')
 const app = express()
+require('dotenv/config')
 
 app.set('trust proxy', true)
 
@@ -20,4 +21,4 @@ app.get('/meu-ip', (req, res) => {
   res.send({ ip })
 })
 
-app.listen(3333)
+app.listen(process.env.PORT)

@@ -8,7 +8,12 @@ function makeDir(folder) {
   const dir = path.resolve(`${__dirname}/../../uploads/${folder}/`)
 
   if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
+    try {
+      fs.mkdirSync(dir);
+      console.log("criou aqui....")
+    } catch {
+      return res.status(409).json({ message: "Erro ao criar diretório!" })
+    }
   }
 }
 

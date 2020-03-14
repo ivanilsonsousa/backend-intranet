@@ -11,7 +11,7 @@ const PhotoPostSchema = new mongoose.Schema({
 })
 
 PhotoPostSchema.virtual('file_url').get(function() {
-  return `http://10.1.3.119:3333/files/photos-caroussel/${this.file}`
+  return `http://${process.env.HOSTPORT}/files/photos-caroussel/${this.file}`
 })
 
 module.exports = mongoose.model('PhotoPost', PhotoPostSchema)

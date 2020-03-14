@@ -10,5 +10,4 @@ module.exports = async function deleteDir(req, res, next) {
     const dir = path.resolve(`${__dirname}/../../uploads/${response.directory}/${response.type === 'file' ? response.file : ''}`)
     rimraf(dir, () => next())
   })
-
 }

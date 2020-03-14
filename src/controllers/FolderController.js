@@ -9,7 +9,7 @@ module.exports = {
     async store(req, res) {
         req.body.type = 'folder'
         const { type } = req.body
-        const { dir: folder, title, parent, dir } = req.body
+        const { dir: folder, title, parent } = req.body
 
         const query = await Document.find({ title: title, type: 'folder', parent: { $eq: parent } } ).countDocuments()
 
@@ -19,7 +19,6 @@ module.exports = {
         const document = await Document.create({
           title,
           folder,
-          // dir,
           parent,
           type,
         })

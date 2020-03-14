@@ -16,7 +16,7 @@ async function getDirDocuments(documents) {
     let doc = { ...element["_doc"], "directory": dir }
 
     if(element.type === 'file')
-      doc.url = `http://10.1.3.119:3333/files/${dir}${element.file}`
+      doc.url = `http://${process.env.HOSTPORT}/files/${dir}${element.file}`
 
     return doc
   })
@@ -42,10 +42,9 @@ async function getDirDoc(document) {
   let doc = { ...document["_doc"], "directory": dir }
 
   if(document.type === 'file')
-    doc.url = `http://10.1.3.119:3333/files/${dir}${document.file}`
+    doc.url = `http://${process.env.HOSTPORT}/files/${dir}${document.file}`
 
   return doc
 }
-
 
 module.exports = { getDirDoc, getDirDocuments }
