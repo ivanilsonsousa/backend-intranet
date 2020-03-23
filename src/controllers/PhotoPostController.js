@@ -2,7 +2,23 @@ const PhotoPost = require('../models/PhotoPost')
 
 module.exports = {
     async index(req, res) {
-      const photoPost = await PhotoPost.find()
+      const { query } = req.query
+      console.log(query)
+
+      const photoPost = await PhotoPost.find({ title: new RegExp(query, 'i') })
+      
+      return res.json(photoPost)
+    },
+    async show(req, res) {
+      const photoPost = await PhotoPost.find({ active: true })
+
+      return res.json(photoPost)
+    },
+    async update(req, res) {
+      const { id } = req.params
+      console.log(req.body)
+
+      const photoPost = await PhotoPost.findByIdAndUpdate(id, req.body )
 
       return res.json(photoPost)
     },
@@ -16,5 +32,12 @@ module.exports = {
       })
 
       return res.json(photoPost)
-  }
+    },
+    async destroy(req, res) {
+      const { id } = req.params
+
+      const photoPost = await PhotoPost.findByIdAndDelete(id)
+
+      return res.json(photoPost)
+    },
 }

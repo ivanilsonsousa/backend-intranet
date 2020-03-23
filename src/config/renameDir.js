@@ -20,12 +20,12 @@ module.exports = async function renameDir(req, res, next) {
           // throw err;	
           console.log(err)
         } else {
-          console.log('Arquivo renomeado');
+          console.log('Arquivo renomeado!');
           next()
         }
       })
     } else {
-      console.log("diretorio não existe...")
+      console.log("Diretorio não existe...")
       next()
       return res.status(409).json({ message: "Esse diretório não existe no diretório informado!" })
     }

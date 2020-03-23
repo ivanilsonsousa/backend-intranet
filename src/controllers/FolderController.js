@@ -11,7 +11,7 @@ module.exports = {
         const { type } = req.body
         const { dir: folder, title, parent } = req.body
 
-        const query = await Document.find({ title: title, type: 'folder', parent: { $eq: parent } } ).countDocuments()
+        const query = await Document.find({ title: title, type: 'folder', parent: { $eq: parent } }).countDocuments()
 
         if(query)
           return res.status(409).json({ message: "Essa pasta já existe!" })

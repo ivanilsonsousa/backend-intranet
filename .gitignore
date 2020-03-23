@@ -5,7 +5,7 @@
 /.pnp
 
 /uploads
-!uploads/.gitkeep
+!/uploads/photos-caroussel/.gitkeep
 
 .pnp.js
 

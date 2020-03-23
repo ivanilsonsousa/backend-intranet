@@ -17,7 +17,7 @@ module.exports = {
       return res.json(document)
     },
     async show(req, res) {
-      const document = await Document.find({ parent: { $eq: req.params.parent } }).sort({ "type":  -1 , "title": 1, "file": 1 })
+      const document = await Document.find({ parent: { $eq: req.params.parent } }).sort({ 'type':  -1 , 'title': 1, 'file': 1 })
 
       getDirDocuments(document).then(response => {
         return res.json(response)

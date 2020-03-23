@@ -2,18 +2,40 @@ const Post = require('../models/Post')
 
 module.exports = {
     async index(req, res) {
-      const post = await Post.find().limit(3)
+      const { query } = req.query
+      console.log(query)
+
+      const post = await Post.find({ $or: [
+        { title: new RegExp(query, 'i') },
+        { description: new RegExp(query, 'i') },
+      ]})
+      
+      return res.json(post)
+    },
+    async show(req, res) {
+      let { qtd } = req.params
+
+      const post = await Post.find({ active: true }).limit(parseInt(qtd, 10))
 
       return res.json(post)
     },
     async store(req, res) {
-      
-      try {
-        const post = await Post.create(req.body)
+      const post = await Post.create(req.body)
 
-        return res.send( post )
-      } catch(err) {
-        return res.status(400).send({ error: "Erro ao registrar: " + err })
-      }
-    }
+      return res.json(post)
+    },
+    async update(req, res) {
+      const { id } = req.params
+
+      const post = await Post.findByIdAndUpdate(id, req.body )
+
+      return res.json(post)
+    },
+    async destroy(req, res) {
+      const { id } = req.params
+
+      const post = await Post.findByIdAndDelete(id)
+
+      return res.json(post)
+    },
 }

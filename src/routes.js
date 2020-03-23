@@ -17,9 +17,15 @@ const upload = multer(uploadConfig)
 const uploadCaroussel = multer(uploadConfigCaroussel)
 
 routes.get('/posts', PostController.index)
+routes.get('/posts/:qtd', PostController.show)
 routes.post('/posts', PostController.store)
+routes.put('/posts/:id', PostController.update)
+routes.delete('/posts/:id', PostController.destroy)
 
 routes.get('/posts-caroussel', PhotoPostController.index)
+routes.get('/posts-caroussel-list', PhotoPostController.show)
+routes.put('/posts-caroussel/:id', PhotoPostController.update)
+routes.delete('/posts-caroussel/:id',PhotoPostController.destroy)
 routes.post('/posts-caroussel', uploadCaroussel.single('file'), PhotoPostController.store)
 
 routes.get('/documents/', DocumentController.index)

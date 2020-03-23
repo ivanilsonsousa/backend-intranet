@@ -10,7 +10,7 @@ function makeDir(folder) {
   if (!fs.existsSync(dir)){
     try {
       fs.mkdirSync(dir);
-      console.log("criou aqui....")
+      console.log("Diretório criado com sucesso...")
     } catch {
       return res.status(409).json({ message: "Erro ao criar diretório!" })
     }

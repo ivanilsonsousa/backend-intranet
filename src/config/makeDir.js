@@ -16,7 +16,7 @@ module.exports = async function makeDir(req, res, next) {
           return res.status(409).json({ message: "Erro ao criar diretório!" })
         }
   
-        console.log("Diretório criado com sucesso! =)")
+        console.log("Diretório criado com sucesso!")
         next()
       });
     } else {
