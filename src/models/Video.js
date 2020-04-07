@@ -5,6 +5,9 @@ const VideoSchema = new mongoose.Schema({
   file: { type: String, required: true },
   company: { type: String, required: true },
   description: { type: String },
+  views: { type: Number, default: 0 },
+  likes: { type: Number, default: 0 },
+  unlikes: { type: Number, default: 0 },
   createAt: { type: Date, default: Date.now }
 }, {
   toJSON: {
