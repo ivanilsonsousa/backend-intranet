@@ -42,4 +42,15 @@ module.exports = {
 
       return res.json(video)
     },
+    async addView(req, res) {
+      const { id } = req.params
+
+      let video = await Video.findById(id)
+
+      let views = ++video.views
+
+      await Video.findByIdAndUpdate(id, { views })
+
+      return res.json({ status: "ok" })
+    },
 }

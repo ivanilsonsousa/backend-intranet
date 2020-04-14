@@ -39,6 +39,7 @@ routes.post('/posts-caroussel', uploadCaroussel.single('file'), PhotoPostControl
 routes.get('/videos', VideoController.index)
 routes.get('/videos-list', VideoController.show)
 routes.put('/videos/:id', VideoController.update)
+routes.put('/videos-add-view/:id', VideoController.addView)
 routes.delete('/videos/:id',VideoController.destroy)
 routes.post('/videos', uploadVideo.single('file'), VideoController.store)
 
