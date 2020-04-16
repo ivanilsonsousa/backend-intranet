@@ -44,10 +44,8 @@ module.exports = {
         { email },
       ] })
 
-      console.log(active)
-
       if(((exists.length === 1) && (exists[0]._id == id)) || (active !== undefined)) {
-        const user = await User.findByIdAndUpdate(id, req.body )
+        const user = await User.findByIdAndUpdate(id, req.body)
         
         return res.json(user)
       } else {
@@ -58,6 +56,17 @@ module.exports = {
       const { id } = req.params
 
       const user = await User.findByIdAndDelete(id)
+
+      return res.json(user)
+    },
+    async resetPass(req, res) {
+      const { id } = req.params
+      const { password, passwordRepeat } = req.body
+
+      if (password !== passwordRepeat)
+        return res.status(412).json({ message: "Senhas não coincidem!" })
+
+      const user = await User.findByIdAndUpdate(id, req.body)
 
       return res.json(user)
     },

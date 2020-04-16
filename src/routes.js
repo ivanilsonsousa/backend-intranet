@@ -45,6 +45,7 @@ routes.post('/videos', uploadVideo.single('file'), VideoController.store)
 
 routes.get('/users', UserController.index)
 routes.put('/users/:id', UserController.update)
+routes.put('/users-reset-pass/:id', UserController.resetPass)
 routes.delete('/users/:id', UserController.destroy)
 routes.post('/users', UserController.store)
 
