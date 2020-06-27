@@ -9,13 +9,13 @@ module.exports = async function makeDir(req, res, next) {
 
   getDirDoc(document).then(response => {
     const dir = path.resolve(`${__dirname}/../../uploads${document ? `/${response.directory}` : ''}/${title}`)
-    
-    if (!fs.existsSync(dir)){
+
+    if (!fs.existsSync(dir)) {
       fs.mkdir(dir, (err) => {
         if (err) {
           return res.status(409).json({ message: "Erro ao criar diretório!" })
         }
-  
+
         console.log("Diretório criado com sucesso!")
         next()
       });
