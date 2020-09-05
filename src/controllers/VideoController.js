@@ -2,11 +2,20 @@ const Video = require('../models/Video')
 
 module.exports = {
     async index(req, res) {
-      const { query } = req.query
+      const { query, pageNumber, limit } = req.query
+
+      let pageOptions = {
+          page: pageNumber || 0,
+          limit: limit || 20
+      }
+
       console.log(query)
 
-      const video = await Video.find({ title: new RegExp(query, 'i') })
-      
+      const video = await Video.
+                            find({ title: new RegExp(query, 'i') })
+                            .skip(pageOptions.page * pageOptions.limit)
+                            .limit(pageOptions.limit)
+
       return res.json(video)
     },
     async show(req, res) {
@@ -23,14 +32,15 @@ module.exports = {
       return res.json(video)
     },
     async store(req, res) {
-      const { filename } = req.file
+      const { file, thumb } = req.files
       const { title, description, company } = req.body
 
       const video = await Video.create({
         title,
         company,
         description,
-        file: filename,
+        file: file[0].filename,
+        thumb: thumb[0].filename,
       })
 
       return res.json(video)
@@ -51,6 +61,6 @@ module.exports = {
 
       await Video.findByIdAndUpdate(id, { views })
 
-      return res.json({ status: "ok" })
+      return res.json({ status: `View adicionada com sucesso ao video ${id}` })
     },
 }

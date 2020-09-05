@@ -5,15 +5,16 @@ module.exports = {
       const { query } = req.query
       console.log(query)
 
-      const phone = await Phone.find({ $or: [
-        { title: new RegExp(query, 'i') },
-        { description: new RegExp(query, 'i') },
-      ]})
+      const phone = await Phone.find({ $and: [ 
+        { $or: [ { title: new RegExp(query, 'i') }, { description: new RegExp(query, 'i') }] },
+        { active: true }]
+      })
       
       return res.json(phone)
     },
     async show(req, res) {
-      const phone = await Phone.find({ active: true })
+      const { query } = req.query
+      const phone = await Phone.find({ $or: [ { title: new RegExp(query, 'i') }, { description: new RegExp(query, 'i') }] })
 
       return res.json(phone)
     },

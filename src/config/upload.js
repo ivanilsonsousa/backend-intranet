@@ -1,18 +1,18 @@
-const Document = require('../models/Document')
-const { getDirDoc } = require('../config/getDir')
-const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
+const Document = require('../models/Document');
+const { getDirDoc } = require('../config/getDir');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 function makeDir(folder) {
-  const dir = path.resolve(`${__dirname}/../../uploads/${folder}/`)
+  const dir = path.resolve(`${__dirname}/../../uploads/${folder}/`);
 
-  if (!fs.existsSync(dir)){
+  if (!fs.existsSync(dir)) {
     try {
       fs.mkdirSync(dir);
-      console.log("Diretório criado com sucesso...")
+      console.log("Diretório criado com sucesso...");
     } catch {
-      return res.status(409).json({ message: "Erro ao criar diretório!" })
+      return res.status(409).json({ message: "Erro ao criar diretório!" });
     }
   }
 }
@@ -20,20 +20,20 @@ function makeDir(folder) {
 module.exports = {
     storage: multer.diskStorage({
         destination: async (req, file, cb) => {
-          const { parent } = req.body
-          const document = await Document.findById(parent)
+          const { parent } = req.body;
+          const document = await Document.findById(parent);
           
           getDirDoc(document).then(response => {
-            makeDir(response.directory)
-            cb(null, path.resolve(__dirname, '..', '..', 'uploads', `${response.directory}`))
+            makeDir(response.directory);
+            cb(null, path.resolve(__dirname, '..', '..', 'uploads', `${response.directory}`));
           })
         },
         filename: (req, file, cb) => {
-          const ext = path.extname(file.originalname)
-          req.body.format = ext
-          const name = path.basename(file.originalname, ext)
+          const ext = path.extname(file.originalname);
+          req.body.format = ext;
+          const name = path.basename(file.originalname, ext);
 
-          cb(null, `${name}-${Date.now()}${ext}`)
+          cb(null, `${name}-${Date.now()}${ext}`);
         }
     }),
 }

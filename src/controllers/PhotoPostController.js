@@ -5,12 +5,12 @@ module.exports = {
       const { query } = req.query
       console.log(query)
 
-      const photoPost = await PhotoPost.find({ title: new RegExp(query, 'i') })
+      const photoPost = await PhotoPost.find({ title: new RegExp(query, 'i') }).sort({ createAt: -1 })
       
       return res.json(photoPost)
     },
     async show(req, res) {
-      const photoPost = await PhotoPost.find({ active: true })
+      const photoPost = await PhotoPost.find({ active: true }).sort({ createAt: -1 })
 
       return res.json(photoPost)
     },

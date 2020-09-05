@@ -3,21 +3,18 @@ const Post = require('../models/Post')
 module.exports = {
   async index(req, res) {
     const { query } = req.query
-    console.log(query)
 
     const post = await Post.find({
       $or: [
         { title: new RegExp(query, 'i') },
         { description: new RegExp(query, 'i') },
       ]
-    })
+    }).sort({ createAt: -1 })
 
     return res.json(post)
   },
   async show(req, res) {
-    let { qtd } = req.params
-
-    const post = await Post.find({ active: true }).sort({ createAt: -1 }).limit(parseInt(qtd, 10))
+    const post = await Post.find({ active: true }).sort({ createAt: -1 })
 
     return res.json(post)
   },

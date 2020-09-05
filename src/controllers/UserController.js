@@ -9,7 +9,7 @@ module.exports = {
         { name: new RegExp(query, 'i') },
         { username: new RegExp(query, 'i') }
       ]
-    })
+    }).sort({ createAt: -1 })
 
     return res.json(user)
   },

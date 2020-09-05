@@ -1,5 +1,5 @@
-const Document = require('../models/Document')
-const { getDirDocuments } = require('../config/getDir')
+const Document = require('../models/Document');
+const { getDirDocuments } = require('../config/getDir');
 
 /**
  * Methods of controllers index, show, store, update, destroy:
@@ -12,43 +12,43 @@ const { getDirDocuments } = require('../config/getDir')
 
 module.exports = {
     async index(req, res) {
-      const document = await Document.find()
+      const document = await Document.find();
 
-      return res.json(document)
+      return res.json(document);
     },
     async show(req, res) {
-      const document = await Document.find({ parent: { $eq: req.params.parent } }).sort({ 'type':  -1 , 'title': 1, 'file': 1 })
+      const document = await Document.find({ parent: { $eq: req.params.parent } }).sort({ 'type':  -1 , 'title': 1, 'file': 1 });
 
       getDirDocuments(document).then(response => {
-        return res.json(response)
-      })
+        return res.json(response);
+      });
     },
     async destroy(req, res) {
-        const document = await Document.findById(req.params.id)
+        const document = await Document.findById(req.params.id);
 
-        let idsDelete = [document._id]
-        let idsSearch = idsDelete
+        let idsDelete = [document._id];
+        let idsSearch = idsDelete;
 
         do {
-          childrens = await Document.find({ parent: { $in: idsSearch } })
-          idsSearch = childrens.map(e => e._id)
-          idsDelete = [...idsDelete, ...idsSearch]
-        } while (idsSearch.length)
+          childrens = await Document.find({ parent: { $in: idsSearch } });
+          idsSearch = childrens.map(e => e._id);
+          idsDelete = [...idsDelete, ...idsSearch];
+        } while (idsSearch.length);
 
-        const response = await Document.deleteMany({ _id: { $in: idsDelete } })
+        const response = await Document.deleteMany({ _id: { $in: idsDelete } });
 
-        return res.json(response)
+        return res.json(response);
     },
     async update(req, res) {
-      const { title } = req.body
-      const document = await Document.findByIdAndUpdate({ _id: req.params.id }, { title })
+      const { title } = req.body;
+      const document = await Document.findByIdAndUpdate({ _id: req.params.id }, { title });
 
-      return res.json(document)
+      return res.json(document);
     },
     async store(req, res) {
-        req.body.type = 'file'
-        const { filename } = req.file
-        const { title, parent, type, format } = req.body
+        req.body.type = 'file';
+        const { filename } = req.file;
+        const { title, parent, type, format } = req.body;
         
         const document = await Document.create({
           title,
@@ -56,8 +56,8 @@ module.exports = {
           format,
           type,
           file: filename,
-        })
+        });
 
-        return res.json(document)
+        return res.json(document);
     }
 }
