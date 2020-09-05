@@ -6,6 +6,7 @@
 
 /uploads
 !/uploads/photos-caroussel/.gitkeep
+!/uploads/videos-intranet/.gitkeep
 
 .pnp.js
 
