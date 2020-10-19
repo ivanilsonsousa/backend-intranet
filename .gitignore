@@ -4,9 +4,10 @@
 /node_modules
 /.pnp
 
-/uploads
-!/uploads/photos-caroussel/.gitkeep
-!/uploads/videos-intranet/.gitkeep
+uploads/*
+!uploads/.gitkeep
+!uploads/photos-caroussel/.gitkeep
+!uploads/videos-intranet/.gitkeep
 
 .pnp.js
 

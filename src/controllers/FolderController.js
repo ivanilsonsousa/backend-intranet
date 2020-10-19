@@ -13,7 +13,7 @@ module.exports = {
 
         const query = await Document.find({ title: title, type: 'folder', parent: { $eq: parent } }).countDocuments()
 
-        if(query)
+        if (query)
           return res.status(409).json({ message: "Essa pasta já existe!" })
 
         const document = await Document.create({

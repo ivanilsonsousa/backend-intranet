@@ -6,9 +6,12 @@ const authMiddleware = require('./middlewares/auth');
 const uploadConfig = require('./config/upload');
 const uploadConfigCaroussel = require('./config/uploadCaroussel');
 const uploadConfigVideo = require('./config/uploadVideo');
+const uploadConfigPhoto = require('./config/uploadPhoto');
+const uploadConfigVideoEdit = require('./config/uploadVideoEdit');
 
 const { makeDir, renameDir, deleteDir } = require('./middlewares/Document');
-const { deleteVideo } = require('./middlewares/Video');
+const { deleteVideo, deleteThumbnail } = require('./middlewares/Video');
+const { deletePhoto } = require('./middlewares/Photo');
 
 const LoginController = require('./controllers/LoginController');
 const PostController = require('./controllers/PostController');
@@ -16,14 +19,17 @@ const UserController = require('./controllers/UserController');
 const FolderController = require('./controllers/FolderController');
 const DocumentController = require('./controllers/DocumentController');
 const PhotoPostController = require('./controllers/PhotoPostController');
+const PhotoController = require('./controllers/PhotoController');
 const VideoController = require('./controllers/VideoController');
 const PhoneController = require('./controllers/PhoneController');
 const MessagePopupController = require('./controllers/MessagePopupController');
 
 const routes = express.Router();
 const upload = multer(uploadConfig);
+const uploadPhoto = multer(uploadConfigPhoto);
 const uploadVideo = multer(uploadConfigVideo);
 const uploadCaroussel = multer(uploadConfigCaroussel);
+const uploadEditThumb = multer(uploadConfigVideoEdit);
 
 routes.post('/login', LoginController.auth);
 routes.get('/authenticate', authMiddleware, LoginController.isAuthenticate);
@@ -45,10 +51,15 @@ routes.post('/posts-caroussel', authMiddleware, uploadCaroussel.single('file'), 
 
 routes.get('/videos', VideoController.index);
 routes.get('/videos-list', VideoController.show);
-routes.put('/videos/:id', authMiddleware, VideoController.update);
+routes.put('/videos/:id', authMiddleware, deleteThumbnail, uploadEditThumb.single('thumb'), VideoController.update);
 routes.put('/videos-add-view/:id', VideoController.addView);
 routes.delete('/videos/:id', authMiddleware, deleteVideo, VideoController.destroy);
 routes.post('/videos', authMiddleware, uploadVideo.fields([{ name:'file', maxCount: 1 }, { name:'thumb', maxCount: 1 }]), VideoController.store);
+
+routes.get('/photos', PhotoController.index);
+routes.post('/photos', uploadPhoto.single('file'), PhotoController.store);
+routes.put('/photos/:id', PhotoController.update);
+routes.delete('/photos/:id', deletePhoto, PhotoController.destroy);
 
 routes.get('/users', authMiddleware, UserController.index);
 routes.put('/users/:id', authMiddleware, UserController.update);

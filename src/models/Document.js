@@ -1,4 +1,4 @@
-const mongoose = require('../database')
+const mongoose = require('../database');
 
 const DocumentSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -7,6 +7,6 @@ const DocumentSchema = new mongoose.Schema({
   format: { type: String },
   parent: {type: String, required: true },
   createAt: { type: Date, default: Date.now }
-})
+});
 
-module.exports = mongoose.model('Document', DocumentSchema)
+module.exports = mongoose.model('Document', DocumentSchema);

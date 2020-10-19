@@ -1,6 +1,6 @@
 const mongoose = require('../database');
 
-const PhotoPostSchema = new mongoose.Schema({
+const PhotoSchema = new mongoose.Schema({
   title: { type: String, required: true },
   file: { type: String, required: true },
   active: { type: Boolean, default: true },
@@ -11,8 +11,8 @@ const PhotoPostSchema = new mongoose.Schema({
   }
 });
 
-PhotoPostSchema.virtual('file_url').get(function() {
-  return `http://${process.env.HOSTPORT}/files/photos-caroussel/${this.file}`;
+PhotoSchema.virtual('file_url').get(function() {
+  return `http://${process.env.HOSTPORT}/files/photos-intranet/${this.file}`;
 })
 
-module.exports = mongoose.model('PhotoPost', PhotoPostSchema);
+module.exports = mongoose.model('Photo', PhotoSchema);

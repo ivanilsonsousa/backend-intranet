@@ -13,6 +13,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/files', express.static(path.resolve(__dirname, '..', 'uploads')));
+app.use('/documents', express.static(path.resolve(__dirname, '..', 'uploads', 'documentos')));
 app.use(routes);
 
 app.get('/my-ip', (req, res) => {

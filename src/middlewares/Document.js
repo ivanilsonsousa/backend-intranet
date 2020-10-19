@@ -1,64 +1,66 @@
 const Document = require('../models/Document');
-const { getDirDoc } = require('../config/getDir');
+const { getDirDoc } = require('../config/getDir')
 const rimraf = require('rimraf');
 const path = require('path');
 const fs = require('fs');
 
 async function makeDir(req, res, next) {
-  const document = req.body.parent == 'root' ? null : await Document.findById(req.body.parent);
-  const { title } = req.body;
+  const { title, parent } = req.body;
 
-  getDirDoc(document).then(response => {
-    const dir = path.resolve(`${__dirname}/../../uploads${document ? `/${response.directory}` : ''}/${title}`);
+  const result = await getDirDoc(parent);
 
-    if (!fs.existsSync(dir)) {
-      fs.mkdir(dir, (err) => {
-        if (err) {
-          return res.status(409).json({ message: "Erro ao criar diretório!" });
-        }
+  const dir = path.resolve(__dirname, '..', '..', 'uploads', 'documentos', ...result, title.trim());
 
-        console.log("Diretório criado com sucesso!");
-        next();
-      });
-    } else {
-      console.log("diretorio já existe...");
-      return res.status(409).json({ message: "Essa pasta já existe no diretório informado!" });
-    }
-    
-  })
+  if (!fs.existsSync(dir)) {
+    fs.mkdir(dir, (err) => {
+      if (err) return res.status(409).json({ message: "Erro ao criar diretório!" });
+
+      next();
+    });
+  } else {
+    return res.status(409).json({ message: "Essa pasta já existe no diretório informado!" });
+  }
+
 }
 
 async function renameDir(req, res, next) {
-  const { title } = req.body
-  const document = await Document.findById(req.params.id)
+  const { title } = req.body;
+  const { id } = req.params;
+  const document = await Document.findById(id);
 
   if (document.type === 'file')
-    return next()
+    return next();
 
-  const response = await getDirDoc(document)
-
-  const dir = path.resolve(`${__dirname}/../../uploads/${response.directory}`)
-  const newDir = `${dir.substr(0, dir.lastIndexOf('\\'))}\\${title.trim()}`
+  const result = await getDirDoc(id);
+  const dir = path.resolve(__dirname, '..', '..', 'uploads', 'documentos', ...result);
+  result.pop();
+  const newDir = path.resolve(__dirname, '..', '..', 'uploads', 'documentos', ...result, title.trim());
 
   if (fs.existsSync(dir)) {
     fs.rename(dir, newDir, function (err) {
-      if (err) return res.status(409).json({ message: "Erro ao renomear o ficheiro" })
+      if (err) return res.status(409).json({ message: "Erro ao renomear o ficheiro" });
 
-      console.log('Arquivo renomeado!');
-      return next()
+      console.log('Arquivo renomeado!', id);
+      return next();
     })
   } else {
-    return res.status(409).json({ message: "Esse diretório não existe no diretório informado!" })
+    return res.status(409).json({ message: "Esse diretório não existe!" });
   }
 }
 
 async function deleteDir(req, res, next) {
-  const document = await Document.findById( req.params.id );
+  const { id } = req.params;
+  const document = await Document.findById(id);
+  const result = await getDirDoc(id);
 
-  getDirDoc(document).then(({ directory, type, file }) => {
-    const dir = path.resolve(`${__dirname}/../../uploads/${directory}/${type === 'file' ? file : ''}`);
-    rimraf(dir, () => next());
-  });
+  const { file, type } = document;
+
+  if (type === 'file')
+    result.push(file);
+
+  const dir = path.resolve(__dirname, '..', '..', 'uploads', 'documentos', ...result);
+  rimraf(dir, () => next());
+
 }
 
 module.exports = { makeDir, renameDir, deleteDir };
