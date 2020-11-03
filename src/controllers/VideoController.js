@@ -9,17 +9,20 @@ module.exports = {
           limit: limit || 20
       };
 
-      const video = await Video.
+      const videos = await Video.
                             find({ title: new RegExp(query, 'i') })
                             .skip(pageOptions.page * pageOptions.limit)
                             .limit(pageOptions.limit);
 
-      return res.json(video);
+      return res.json(videos);
     },
     async show(req, res) {
-      const video = await Video.find({ active: true });
-
-      return res.json(video);
+      const { query } = req.query;
+      console.log(query);
+      
+      const videos = await Video.find({ title: new RegExp(String(query), 'i') });
+        
+      return res.json(videos);
     },
     async update(req, res) {
       const { id } = req.params;

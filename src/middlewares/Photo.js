@@ -4,7 +4,7 @@ const path = require('path');
 
 async function deletePhoto(req, res, next) {
   const photo = await Photo.findById(req.params.id);
-  const dirPhotoFile = path.resolve(__dirname, '..', '..', 'uploads', 'photos-intranet', photo.file);
+  const dirPhotoFile = path.resolve(__dirname, '..', '..', '..', 'uploads', 'photos-intranet', photo.file);
 
   rimraf(dirPhotoFile, () => next());
 }

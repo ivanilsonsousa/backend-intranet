@@ -9,7 +9,7 @@ async function makeDir(req, res, next) {
 
   const result = await getDirDoc(parent);
 
-  const dir = path.resolve(__dirname, '..', '..', 'uploads', 'documentos', ...result, title.trim());
+  const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result, title.trim());
 
   if (!fs.existsSync(dir)) {
     fs.mkdir(dir, (err) => {
@@ -32,9 +32,9 @@ async function renameDir(req, res, next) {
     return next();
 
   const result = await getDirDoc(id);
-  const dir = path.resolve(__dirname, '..', '..', 'uploads', 'documentos', ...result);
+  const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result);
   result.pop();
-  const newDir = path.resolve(__dirname, '..', '..', 'uploads', 'documentos', ...result, title.trim());
+  const newDir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result, title.trim());
 
   if (fs.existsSync(dir)) {
     fs.rename(dir, newDir, function (err) {
@@ -58,7 +58,7 @@ async function deleteDir(req, res, next) {
   if (type === 'file')
     result.push(file);
 
-  const dir = path.resolve(__dirname, '..', '..', 'uploads', 'documentos', ...result);
+  const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result);
   rimraf(dir, () => next());
 
 }

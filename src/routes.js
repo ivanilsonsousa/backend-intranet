@@ -23,6 +23,7 @@ const PhotoController = require('./controllers/PhotoController');
 const VideoController = require('./controllers/VideoController');
 const PhoneController = require('./controllers/PhoneController');
 const MessagePopupController = require('./controllers/MessagePopupController');
+const BirthdaysController = require('./controllers/BirthdaysController');
 
 const routes = express.Router();
 const upload = multer(uploadConfig);
@@ -80,5 +81,7 @@ routes.delete('/documents/:id', deleteDir, DocumentController.destroy);
 routes.post('/documents', upload.single('file'), DocumentController.store);
 
 routes.post('/folders', makeDir, FolderController.store);
+
+routes.get('/birthdays', BirthdaysController.index);
 
 module.exports = routes;

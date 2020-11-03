@@ -1,4 +1,4 @@
-const Popup = require('../models/MessagePopup')
+const Popup = require('../models/MessagePopup');
 
 module.exports = {
   // async index(req, res) {

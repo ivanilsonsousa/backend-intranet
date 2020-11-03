@@ -8,7 +8,7 @@ module.exports = {
       const { parent } = req.body;
       
       const result = await getDirDoc(parent);
-      const dir = path.resolve(__dirname, '..', '..', 'uploads', 'documentos', ...result);
+      const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result);
 
       cb(null, dir);
     },
