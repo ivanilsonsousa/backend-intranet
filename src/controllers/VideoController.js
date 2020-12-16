@@ -20,7 +20,7 @@ module.exports = {
       const { query } = req.query;
       console.log(query);
       
-      const videos = await Video.find({ title: new RegExp(String(query), 'i') });
+      const videos = await Video.find({ title: new RegExp(query, 'i') });
         
       return res.json(videos);
     },

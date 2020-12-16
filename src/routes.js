@@ -18,6 +18,7 @@ const PostController = require('./controllers/PostController');
 const UserController = require('./controllers/UserController');
 const FolderController = require('./controllers/FolderController');
 const DocumentController = require('./controllers/DocumentController');
+const PopController = require('./controllers/PopController');
 const PhotoPostController = require('./controllers/PhotoPostController');
 const PhotoController = require('./controllers/PhotoController');
 const VideoController = require('./controllers/VideoController');
@@ -79,6 +80,10 @@ routes.get('/documents/:parent', DocumentController.show);
 routes.put('/documents/:id', renameDir, DocumentController.update);
 routes.delete('/documents/:id', deleteDir, DocumentController.destroy);
 routes.post('/documents', upload.single('file'), DocumentController.store);
+
+routes.get('/pops', PopController.index);
+routes.get('/pops-tree', PopController.show);
+routes.post('/pops/:parent', PopController.store);
 
 routes.post('/folders', makeDir, FolderController.store);
 
