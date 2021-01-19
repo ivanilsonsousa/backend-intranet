@@ -10,28 +10,25 @@ module.exports = {
     async show(req, res) {
       const pops = await Pop.find().sort({ 'type':  -1 , 'title': 1, 'file': 1 });
 
-      const dadosFormatado = pops.reduce((acc, d, i) => {
-        // const nodo = acc.find(a => a.parent === d._id);
-    
-        // if (nodo) nodo.children.push({
-        //     _id: i + 1,
-        //     title: d.children_name
-        // });
-      
-        // else acc.push({
-        //     _id: d._id,
-        //     title: d.title,
-        //     children: [{
-        //         id: i + 1, 
-        //         name: d.children_name
-        //     }]
-        // });
-        console.log(d);
-        return d;
-      }, []);
-    
-      // return res.json(dadosFormatado);
-      return res.json(pops);
+      let index = 0;
+
+      while(index < pops.length) {
+        console.log(index);
+
+        if ((index === 15) || (index === 16)) {
+          pops.push({ "A": "B" })
+        }
+
+        //implementar busca de elementos pais não achados na busca inicial
+
+        console.log(index, " - ", pops[index])
+
+        index++;
+      }
+
+      // console.log(pops)
+
+      return res.send(pops);
     },
     async destroy(req, res) {
         // const document = await Document.findById(req.params.id);
