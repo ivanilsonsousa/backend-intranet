@@ -8,27 +8,62 @@ module.exports = {
       return res.json(pop);
     },
     async show(req, res) {
-      const pops = await Pop.find().sort({ 'type':  -1 , 'title': 1, 'file': 1 });
+      let { query } = req.query;
 
-      let index = 0;
+      const pops = await Pop.find({ title: new RegExp(query, 'i') }); 
 
-      while(index < pops.length) {
-        console.log(index);
+      let i = 0;
 
-        if ((index === 15) || (index === 16)) {
-          pops.push({ "A": "B" })
+      const foundParent = (parent) => {
+        let i = 0;
+
+        while(i < pops.length) {
+          if(pops[i].parent === parent) return true;
+
+          i++;
         }
 
-        //implementar busca de elementos pais não achados na busca inicial
-
-        console.log(index, " - ", pops[index])
-
-        index++;
+        return false;
       }
 
-      // console.log(pops)
+      const foundElement = (id) => {
+        let i = 0;
 
-      return res.send(pops);
+        while(i < pops.length) {
+          if(String(pops[i]._id) == String(id)) return true;
+
+          i++;
+        }
+
+        return false;
+      }
+
+      const pushElement = (el) => {
+
+        if (foundElement(el._id)) {
+          return;
+        }
+
+        pops.push(el);
+      }
+
+      while(i < pops.length) {        
+        const notExistsParent = foundParent(pops[i].parent);
+
+        if((pops[i].parent !== 'root') && (notExistsParent)) {
+          const parent = await Pop.findById(pops[i].parent);
+          
+          pushElement(parent);
+        }
+
+        i++;
+      }
+
+      const idsPops = pops.map(e => e._id);
+
+      const popsWithParents = await Pop.find({ _id: { $in: idsPops } }).sort({ 'type':  -1 , 'title': 1, 'file': 1 });
+
+      return res.send(popsWithParents);
     },
     async destroy(req, res) {
         // const document = await Document.findById(req.params.id);
