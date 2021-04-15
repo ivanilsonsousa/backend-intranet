@@ -1,7 +1,5 @@
-const Document = require('../models/Document');
-
-async function getDirDoc(firstParent) {
-  const document = firstParent === 'root' ? null : await Document.findById(firstParent);
+async function getDirDoc(firstParent, Model) {
+  const document = firstParent === 'root' ? null : await Model.findById(firstParent);
   const pathDoc = [];
 
   if (firstParent === 'root') return pathDoc;
@@ -12,7 +10,7 @@ async function getDirDoc(firstParent) {
     pathDoc.unshift(title);
 
   while (parent != 'root') {
-    query = await Document.findById(parent);
+    query = await Model.findById(parent);
     parent = query.parent;
     pathDoc.unshift(query.title);
   }
@@ -20,17 +18,17 @@ async function getDirDoc(firstParent) {
   return pathDoc;
 }
 
-async function getDirDocuments(documents) {
+async function getDirDocuments(documents, path, Model) {
   const promises = documents.map(async element => {
     const { parent, type, file } = element;
 
-    const pathDoc = await getDirDoc(parent);
+    const pathDoc = await getDirDoc(parent, Model);
     const directory = pathDoc.join('/');
 
     let doc = { ...element["_doc"], "directory": directory };
 
     if (type === 'file') {
-      doc.url = `http://${process.env.HOSTPORT}/documents/${directory}/${file}`;
+      doc.url = `http://${process.env.HOSTPORT}/${path}/${directory}/${file}`;
     }
 
     return doc;

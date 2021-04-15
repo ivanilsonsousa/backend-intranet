@@ -1,4 +1,4 @@
-const Document = require("../models/Document");
+const Pop = require("../models/Pop");
 const { getDirDoc } = require('../config/getDir');
 const multer = require('multer');
 const path = require('path');
@@ -6,10 +6,7 @@ const path = require('path');
 module.exports = {
   storage: multer.diskStorage({
     destination: async (req, file, cb) => {
-      const { parent } = req.body;
-      
-      const result = await getDirDoc(parent, Document);
-      const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result);
+      const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'links');
 
       cb(null, dir);
     },
@@ -20,4 +17,15 @@ module.exports = {
       cb(null, `${name}-${Date.now()}${ext}`);
     }
   }),
+  // fileFilter: (req, file, cb) => {
+  //   const allowMimes = [
+  //     'image/*'
+  //   ];
+
+  //   if (allowMimes.includes(file.mimetype)) {
+  //     cb(null, true);
+  //   } else {
+  //     cb(new Error("Mimetype não suportado"));
+  //   }
+  // }
 }

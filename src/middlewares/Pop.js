@@ -1,4 +1,4 @@
-const Document = require('../models/Document');
+const Pop = require('../models/Pop');
 const { getDirDoc } = require('../config/getDir')
 const rimraf = require('rimraf');
 const path = require('path');
@@ -7,9 +7,9 @@ const fs = require('fs');
 async function makeDir(req, res, next) {
   const { title, parent } = req.body;
 
-  const result = await getDirDoc(parent, Document);
+  const result = await getDirDoc(parent, Pop);
 
-  const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result, title.trim());
+  const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'pops-intranet', ...result, title.trim());
 
   if (!fs.existsSync(dir)) {
     fs.mkdir(dir, (err) => {
@@ -26,15 +26,15 @@ async function makeDir(req, res, next) {
 async function renameDir(req, res, next) {
   const { title } = req.body;
   const { id } = req.params;
-  const document = await Document.findById(id);
+  const document = await Pop.findById(id);
 
   if (document.type === 'file')
     return next();
 
-  const result = await getDirDoc(id, Document);
-  const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result);
+  const result = await getDirDoc(id, Pop);
+  const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'pops-intranet', ...result);
   result.pop();
-  const newDir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result, title.trim());
+  const newDir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'pops-intranet', ...result, title.trim());
 
   if (fs.existsSync(dir)) {
     fs.rename(dir, newDir, function (err) {
@@ -50,15 +50,15 @@ async function renameDir(req, res, next) {
 
 async function deleteDir(req, res, next) {
   const { id } = req.params;
-  const document = await Document.findById(id);
-  const result = await getDirDoc(id, Document);
+  const document = await Pop.findById(id);
+  const result = await getDirDoc(id, Pop);
 
   const { file, type } = document;
 
   if (type === 'file')
     result.push(file);
 
-  const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'documentos', ...result);
+  const dir = path.resolve(__dirname, '..', '..', '..', 'uploads', 'pops-intranet', ...result);
   rimraf(dir, () => next());
 
 }

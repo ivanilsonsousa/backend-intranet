@@ -8,17 +8,22 @@ const uploadConfigCaroussel = require('./config/uploadCaroussel');
 const uploadConfigVideo = require('./config/uploadVideo');
 const uploadConfigPhoto = require('./config/uploadPhoto');
 const uploadConfigVideoEdit = require('./config/uploadVideoEdit');
+const uploadConfigPop = require('./config/uploadPop');
+const uploadConfigLink = require('./config/uploadLink');
 
-const { makeDir, renameDir, deleteDir } = require('./middlewares/Document');
+// const { makeDir, renameDir, deleteDir } = require('./middlewares/Document');
+// const { makeDir: makeDirPop, renameDir: renameDirPop, deleteDir: deleteDirPop } = require('./middlewares/Pop');
 const { deleteVideo, deleteThumbnail } = require('./middlewares/Video');
 const { deletePhoto } = require('./middlewares/Photo');
 
 const LoginController = require('./controllers/LoginController');
 const PostController = require('./controllers/PostController');
 const UserController = require('./controllers/UserController');
-const FolderController = require('./controllers/FolderController');
-const DocumentController = require('./controllers/DocumentController');
+// const FolderController = require('./controllers/FolderController');
+// const FolderPopController = require('./controllers/FolderPopController');
 const PopController = require('./controllers/PopController');
+const LinkController = require('./controllers/LinkController');
+const DocumentController = require('./controllers/DocumentController');
 const PhotoPostController = require('./controllers/PhotoPostController');
 const PhotoController = require('./controllers/PhotoController');
 const VideoController = require('./controllers/VideoController');
@@ -29,6 +34,8 @@ const BirthdaysController = require('./controllers/BirthdaysController');
 const routes = express.Router();
 const upload = multer(uploadConfig);
 const uploadPhoto = multer(uploadConfigPhoto);
+const uploadPop = multer(uploadConfigPop);
+const uploadLink = multer(uploadConfigLink);
 const uploadVideo = multer(uploadConfigVideo);
 const uploadCaroussel = multer(uploadConfigCaroussel);
 const uploadEditThumb = multer(uploadConfigVideoEdit);
@@ -77,15 +84,39 @@ routes.post('/phones', authMiddleware, PhoneController.store);
 
 routes.get('/documents/', DocumentController.index);
 routes.get('/documents/:parent', DocumentController.show);
-routes.put('/documents/:id', renameDir, DocumentController.update);
-routes.delete('/documents/:id', deleteDir, DocumentController.destroy);
-routes.post('/documents', upload.single('file'), DocumentController.store);
+routes.put('/documents/:id', DocumentController.update);
+routes.delete('/documents/:id', DocumentController.destroy);
+routes.post('/documents', upload.array('files'), DocumentController.store);
+routes.post('/documents/:parent', DocumentController.store);
 
-routes.get('/pops', PopController.index);
-routes.get('/pops-tree', PopController.show);
+// routes.get('/pops/', PopController.index);
+// routes.get('/pops/:parent', PopController.show);
+// routes.put('/pops/:id', renameDir, PopController.update);
+// routes.delete('/pops/:id', deleteDir, PopController.destroy);
+// routes.post('/pops', upload.single('file'), PopController.store);
+// routes.post('/pops/:parent', PopController.store);
+
+routes.get('/pops/', PopController.index);
+routes.get('/pops/:parent', PopController.show);
+routes.put('/pops/:id', PopController.update);
+routes.delete('/pops/:id', PopController.destroy);
+routes.post('/pops', uploadPop.array('files'), PopController.store);
 routes.post('/pops/:parent', PopController.store);
 
-routes.post('/folders', makeDir, FolderController.store);
+// routes.get('/links/', PopController.index);
+// routes.put('/links/:id', PopController.update);
+// routes.delete('/links/:id', PopController.destroy);
+routes.post('/links', uploadLink.single('file'), LinkController.store);
+
+// routes.get('/pops', PopController.index);
+// routes.get('/pops-tree', PopController.show);
+// routes.delete('/pops/:id', PopController.destroy);
+// routes.post('/pops/:parent', PopController.store);
+// routes.put('/pops/:id', PopController.update);
+// routes.post('/pops', uploadPop.array('files'), PopController.store);
+
+// routes.post('/folders', makeDir, FolderController.store);
+// routes.post('/folders-pops', makeDirPop, FolderPopController.store);
 
 routes.get('/birthdays', BirthdaysController.index);
 
