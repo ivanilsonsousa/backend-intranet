@@ -1,4 +1,4 @@
-const Link = require("../models/Link");
+const Pop = require("../models/Pop");
 const { getDirDocuments } = require("../config/getDir");
 const { makeDir, renameDir, deleteDir } = require("../middlewares/Dir");
 const { getBreadCrumb, getNameWithOutExt, getExt } = require("../functions");
@@ -12,13 +12,14 @@ module.exports = {
     async show(req, res) {
       const { parent } = req.params;
 
-      const documents = await Pop
-                                      .find({ parent: { $eq: parent } })
-                                      .sort({ "type":  -1 , "title": 1, "file": 1 });
+      const pops = await Pop
+                            .find({ parent: { $eq: parent } })
+                            .sort({ "type":  -1 , "title": 1, "file": 1 });
 
       const bread = await getBreadCrumb(parent, [], Pop);
 
-      const result = await getDirDocuments(documents, "pops", Pop);
+      const result = await getDirDocuments(pops, "pops", Pop);
+
       return res.json({ result, bread });
     },
     async destroy(req, res) {
@@ -26,8 +27,6 @@ module.exports = {
       const pop = await Pop.findById(id);
 
       const status = await deleteDir("pops-intranet", id, Pop);
-
-      console.log("status::", status);
 
       let idsDelete = [pop._id];
       let idsSearch = idsDelete;
@@ -55,22 +54,37 @@ module.exports = {
       return res.json(pop);
     },
     async store(req, res) {
-      // const { file } = req;
-      // const { parent } = req.params;
-      // const { title, parent: parent_file, type } = req.body;
+      const { files } = req;
+      const { parent } = req.params;
+      const { title, parent: parent_file, type } = req.body;
 
-      // let pop;
+      let pop;
 
-      // let filename = getNameWithOutExt(file.originalname);
-      // let format = getExt(file.originalname);
+      if (type === 'file') {
 
-      // pop = await Pop.create({
-      //   title: filename,
-      //   parent: parent_file,
-      //   file: file.filename,
-      //   format,
-      //   type,
-      // });
+        files.map(async file => {
+          let filename = getNameWithOutExt(file.originalname);
+          let format = getExt(file.originalname);
+
+          pop = await Pop.create({
+            title: filename,
+            parent: parent_file,
+            file: file.filename,
+            format,
+            type,
+          });
+        })
+
+      } else {
+        const status = await makeDir("pops-intranet", title, parent, Pop);
+
+        pop = await Pop.create({
+          title,
+          type: "folder",
+          parent,
+        });
+
+      }
 
       return res.json(pop);
     }
